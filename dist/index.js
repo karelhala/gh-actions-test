@@ -9694,7 +9694,7 @@ const toReleaseType = ({ comment, label }) => {
     'release': 'bug',
     'release minor': 'minor',
     'release major': 'major'
-  }[type] || labelType;
+  }[type || labelType] || labelType;
 }
 
 try {
