@@ -15,36 +15,13 @@ jobs:
         uses: karelhala/gh-actions-test@v1.2
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-  pr_commented_bug:
+  pr_commented:
     runs-on: ubuntu-latest
     name: A job to trigger released on comment
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == 'release' }}
+    if: ${{ github.event.issue.pull_request && (github.event.comment.body == 'release' || github.event.comment.body == 'release minor' || github.event.comment.body == 'release major') }}
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.2
+        uses: karelhala/gh-actions-test@v1.3
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-          release-type: 'bug'
-  pr_commented_minor:
-    runs-on: ubuntu-latest
-    name: A job to trigger released on comment
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == 'release minor' }}
-    steps:
-      - name: Hello world action step
-        id: hello
-        uses: karelhala/gh-actions-test@v1.2
-        with:
-          gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-          release-type: 'minor'
-  pr_commented_major:
-    runs-on: ubuntu-latest
-    name: A job to trigger released on comment
-    if: ${{ github.event.issue.pull_request && github.event.comment.body == 'release major' }}
-    steps:
-      - name: Hello world action step
-        id: hello
-        uses: karelhala/gh-actions-test@v1.2
-        with:
-          gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-          release-type: 'major'

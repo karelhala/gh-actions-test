@@ -4,9 +4,6 @@ inputs:
   gh-bot-token:  # id of input
     description: 'Token to use to comment and/or trigger a build/release'
     required: true
-  release-type:
-    description: 'Type of release to trigger'
-    required: false
   travis-token:
     description: 'Token to use to trigger travis build'
     required: false
