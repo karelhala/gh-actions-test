@@ -9687,13 +9687,26 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(5714);
 const github = __nccwpck_require__(183);
 
+const toReleaseType = ({ comment, label }) => {
+  const { body: type } = comment || {};
+  const { name: labelType } = label || {};
+  return {
+    'release': 'bug',
+    'release minor': 'minor',
+    'release major': 'major'
+  }[type] || labelType;
+}
+
 try {
-  // `who-to-greet` input defined in action metadata file
+  if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
+    console.log('Not releasing! It has already been released!');
+    return;
+  }
   const ghBotToken = core.getInput('gh-bot-token');
   const travisToken = core.getInput('travis-token');
   const isGithubAction = core.getInput('is-gh');
   const isTravis = core.getInput('is-travis');
-  const releaseType = core.getInput('release-type');
+  const releaseType = toReleaseType(github.context.payload);
   console.log(`Is it travis?: ${isTravis}`);
   console.log(`Is it gh actions?: ${isGithubAction}`);
   console.log(`This is release type: ${releaseType}`);
