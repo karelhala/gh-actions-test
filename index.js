@@ -7,8 +7,10 @@ try {
   const travisToken = core.getInput('travis-token');
   const isGithubAction = core.getInput('is-gh');
   const isTravis = core.getInput('is-travis');
+  const releaseType = core.getInput('release-type');
   console.log(`Is it travis?: ${isTravis}`);
   console.log(`Is it gh actions?: ${isGithubAction}`);
+  console.log(`This is release type: ${releaseType}`);
   if (ghBotToken) {
     console.log(`GH bot token defined!`);
   }
