@@ -9698,6 +9698,10 @@ try {
   if (ghBotToken) {
     console.log(`GH bot token defined!`);
   }
+
+  if (travisToken) {
+    console.log(`Travis token defined!`);
+  }
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
