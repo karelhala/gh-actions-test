@@ -13,7 +13,7 @@ const toReleaseType = ({ comment, label }) => {
 
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
-    console.log('Not releasing! It has already been released!');
+    console.log('Not releasing. It has already been released!');
     return;
   }
   const ghBotToken = core.getInput('gh-bot-token');
