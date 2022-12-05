@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.1
+        uses: karelhala/gh-actions-test@v1.2
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
   pr_commented_bug:
@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.1
+        uses: karelhala/gh-actions-test@v1.2
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           release-type: 'bug'
@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.1
+        uses: karelhala/gh-actions-test@v1.2
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           release-type: 'minor'
@@ -44,7 +44,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.1
+        uses: karelhala/gh-actions-test@v1.2
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           release-type: 'major'
