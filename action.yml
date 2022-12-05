@@ -1,13 +1,21 @@
 name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  gh-bot-token:  # id of input
+    description: 'Token to use to comment and/or trigger a build/release'
     required: true
-    default: 'World'
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  travis-token:
+    description: 'Token to use to trigger travis build'
+    required: false
+    default: false
+  is-gh:
+    description: 'Flag to use GH action'
+    required: false
+    default: false
+  is-travis:
+    description: 'Flag to use travis build'
+    required: false
+    default: false
 runs:
   using: 'node16'
   main: 'dist/index.js'

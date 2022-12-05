@@ -9689,10 +9689,15 @@ const github = __nccwpck_require__(183);
 
 try {
   // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  core.setOutput('time', time);
+  const ghBotToken = core.getInput('gh-bot-token');
+  const travisToken = core.getInput('travis-token');
+  const isGithubAction = core.getInput('is-gh');
+  const isTravis = core.getInput('is-travis');
+  console.log(`Is it travis?: ${isTravis}`);
+  console.log(`Is it gh actions?: ${isGithubAction}`);
+  if (ghBotToken) {
+    console.log(`GH bot token defined!`);
+  }
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
   console.log(`The event payload: ${payload}`);
