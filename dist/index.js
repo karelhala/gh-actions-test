@@ -15968,9 +15968,9 @@ try {
     console.log('PR has been merged!');
     if (isTravis) {
       console.log('Using travis release!');
-      const travisConfig = core.getInput('travis-token');
+      const travisConfig = core.getInput('travis-config');
       travisTrigger(ghConfig, releaseType, {
-        token: travisToken,
+        token: core.getInput('travis-token'),
         ...travisConfig
       });
     }
