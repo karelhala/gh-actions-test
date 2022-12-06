@@ -15957,7 +15957,7 @@ try {
     group,
     number: github.context.payload?.number,
   };
-  const { merged } = JSON.parse(github.context.payload);
+  const { merged } = github.context.payload;
   
   console.log(`Is PR merged?: ${merged}`);
   console.log(`GH config: ${ghConfig}`);
