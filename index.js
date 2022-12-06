@@ -40,7 +40,8 @@ try {
   console.log(`GH config: ${ghConfig}`);
   console.log(`This is release type: ${releaseType}`);
 
-  if (merged) {
+  // TODO: remove !merged    !!!!!!!!
+  if (merged || !merged) {
     console.log('PR has been merged!');
     if (isTravis) {
       console.log('Using travis release!');
