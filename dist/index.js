@@ -15946,8 +15946,11 @@ try {
     return;
   }
   const context = github.context;
+  context.log(core.getInput('is-gh'), 'this is just the raw is gh');
   const isGithubAction = JSON.parse(core.getInput('is-gh'));
+  context.log(`Is it gh actions?: ${isGithubAction}`);
   const isTravis = JSON.parse(core.getInput('is-travis'));
+  context.log(`Is it travis?: ${isTravis}`);
   const releaseType = toReleaseType(github.context.payload);
   const [owner, group] = github.context.payload?.base?.repo?.full_name?.split('/') || [];
   const ghConfig = {
@@ -15959,8 +15962,6 @@ try {
   
   context.log(`Is PR merged?: ${merged}`);
   context.log(`GH config: ${ghConfig}`);
-  context.log(`Is it travis?: ${isTravis}`);
-  context.log(`Is it gh actions?: ${isGithubAction}`);
   context.log(`This is release type: ${releaseType}`);
 
   if (merged) {
