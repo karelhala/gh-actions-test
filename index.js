@@ -28,16 +28,16 @@ try {
   const isTravis = JSON.parse(core.getInput('is-travis'));
   console.log(`Is it travis?: ${isTravis}`);
   const releaseType = toReleaseType(github.context.payload);
-  const [owner, group] = github.context.payload?.base?.repo?.full_name?.split('/') || [];
+  const [owner, group] = github.context.payload?.repository?.full_name?.split('/') || [];
   const ghConfig = {
     owner,
-    group,
-    number: github.context.payload?.number,
+    repo: group,
+    number: github.context.payload?.issue?.number || github.context.payload?.number,
   };
-  const { merged } = github.context.payload;
+  const { merged } = github.context.payload?.issue?.state || github.context.payload?.pull_request?.state;
   
   console.log(`Is PR merged?: ${merged}`);
-  console.log(`GH config: ${ghConfig}`);
+  console.log(`GH config: ${JSON.stringify(ghConfig)}`);
   console.log(`This is release type: ${releaseType}`);
 
   // TODO: remove !merged    !!!!!!!!
