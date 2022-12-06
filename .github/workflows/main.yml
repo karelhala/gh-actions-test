@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.5
+        uses: karelhala/gh-actions-test@v1.6
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
   pr_commented:
@@ -22,6 +22,6 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.5
+        uses: karelhala/gh-actions-test@v1.6
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}

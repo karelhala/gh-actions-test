@@ -2,8 +2,20 @@ name: 'Hello World'
 description: 'Greet someone and record the time'
 inputs:
   gh-bot-token:  # id of input
-    description: 'Token to use to comment and/or trigger a build/release'
+    description: 'Token to use to comment on PR'
     required: true
+  gh-release-bot-token:
+    description: 'Token to use to trigger a build/release'
+    required: false
+    default: false
+  travis-config:
+    description: 'JSON of travis config: script, group?, repo?, token?'
+    required: false
+    default: '{}'
+  gh-config:
+    description: 'JSON of github action config: script, group?, repo?, token?'
+    required: false
+    default: '{}'
   travis-token:
     description: 'Token to use to trigger travis build'
     required: false

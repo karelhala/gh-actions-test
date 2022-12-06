@@ -1,6 +1,67 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6253:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const axios = __nccwpck_require__(9488);
+
+async function ghTrigger({ owner, repo, number }, releaseType, context, config) {
+  context.log('Missing implementation!');
+}
+
+module.exports = ghTrigger;
+
+
+/***/ }),
+
+/***/ 4574:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const axios = __nccwpck_require__(9488);
+
+async function travisTrigger({ owner, repo, number }, releaseType, context, config) {
+    const body = {
+        request: {
+            config: {
+                env: {
+                    PR_NUMBER: number,
+                    RELEASE_TYPE: releaseType
+                },
+                script: config?.script || 'npm run release:api'
+            }
+        }
+    }
+
+    const travisURL = `https://api.travis-ci.com/repo/${(config?.group) || owner}%2F${(config?.repo) || repo}/requests`;
+    context && context.log(`Notifyig travis on URL: ${travisURL}`);
+    context && context.log(`With data: ${JSON.stringify(body)}`);
+    try {
+        axios.post(
+            travisURL,
+            body,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Travis-API-Version': 3,
+                    'Authorization': `token ${config?.token}`
+                }
+            }
+        ).catch(({ response: { data, status } }) => {
+            context.log('Error status: ', status);
+            context.log('Error data: ', data);
+        })
+    } catch(e) {
+        context.log(e);
+    }
+}
+
+module.exports = travisTrigger;
+
+
+/***/ }),
+
 /***/ 1222:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -9507,6 +9568,14 @@ function wrappy (fn, cb) {
 
 /***/ }),
 
+/***/ 9488:
+/***/ ((module) => {
+
+module.exports = eval("require")("axios");
+
+
+/***/ }),
+
 /***/ 8076:
 /***/ ((module) => {
 
@@ -9686,40 +9755,72 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(5714);
 const github = __nccwpck_require__(183);
+const travisTrigger = __nccwpck_require__(4574);
+const ghTrigger = __nccwpck_require__(6253);
+
+const bug = 'BUG';
+const minor = 'MINOR';
+const major = 'MAJOR';
 
 const toReleaseType = ({ comment, label }) => {
   const { body: type } = comment || {};
   const { name: labelType } = label || {};
   return {
-    'release': 'bug',
-    'release minor': 'minor',
-    'release major': 'major'
+    'release': bug,
+    'release minor': minor,
+    'release major': major
   }[type || labelType] || labelType;
 }
 
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
-    console.log('Not releasing. It has already been released!');
+    context.log('Not releasing. It has already been released!');
     return;
   }
-  const ghBotToken = core.getInput('gh-bot-token');
-  const travisToken = core.getInput('travis-token');
-  const isGithubAction = core.getInput('is-gh');
-  const isTravis = core.getInput('is-travis');
+  const context = github.context;
+  const isGithubAction = JSON.parse(core.getInput('is-gh'));
+  const isTravis = JSON.parse(core.getInput('is-travis'));
   const releaseType = toReleaseType(github.context.payload);
-  console.log(`Is it travis?: ${isTravis}`);
-  console.log(`Is it gh actions?: ${isGithubAction}`);
-  console.log(`This is release type: ${releaseType}`);
-  if (ghBotToken) {
-    console.log(`GH bot token defined!`);
+  const [owner, group] = github.context.payload?.base?.repo?.full_name?.split('/') || [];
+  const ghConfig = {
+    owner,
+    group,
+    number: github.context.payload?.number,
+  };
+  const { merged } = JSON.parse(github.context.payload);
+  
+  context.log(`Is PR merged?: ${merged}`);
+  context.log(`GH config: ${ghConfig}`);
+  context.log(`Is it travis?: ${isTravis}`);
+  context.log(`Is it gh actions?: ${isGithubAction}`);
+  context.log(`This is release type: ${releaseType}`);
+
+  if (merged) {
+    context.log('PR has been merged!');
+    if (isTravis) {
+      context.log('Using travis release!');
+      const travisConfig = core.getInput('travis-token');
+      travisTrigger(ghConfig, releaseType, context, {
+        token: travisToken,
+        ...travisConfig
+      });
+    }
+  
+    if (isGithubAction) {
+      context.log('Using github action release!');
+      const travisConfig = core.getInput('gh-release-bot-token') || core.getInput('gh-bot-token');
+      ghTrigger(ghConfig, releaseType, context, {
+        token: travisToken,
+        ...travisConfig
+      });
+    }
+  } else {
+    context.log('PR not merged!');
   }
 
-  if (travisToken) {
-    console.log(`Travis token defined!`);
-  }
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  context.log(`The event payload: ${payload}`);
 } catch (error) {
   core.setFailed(error.message);
 }
