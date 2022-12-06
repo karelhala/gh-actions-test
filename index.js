@@ -19,15 +19,14 @@ const toReleaseType = ({ comment, label }) => {
 
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
-    context.log('Not releasing. It has already been released!');
+    console.log('Not releasing. It has already been released!');
     return;
   }
-  const context = github.context;
-  context.log(core.getInput('is-gh'), 'this is just the raw is gh');
+  console.log(core.getInput('is-gh'), 'this is just the raw is gh');
   const isGithubAction = JSON.parse(core.getInput('is-gh'));
-  context.log(`Is it gh actions?: ${isGithubAction}`);
+  console.log(`Is it gh actions?: ${isGithubAction}`);
   const isTravis = JSON.parse(core.getInput('is-travis'));
-  context.log(`Is it travis?: ${isTravis}`);
+  console.log(`Is it travis?: ${isTravis}`);
   const releaseType = toReleaseType(github.context.payload);
   const [owner, group] = github.context.payload?.base?.repo?.full_name?.split('/') || [];
   const ghConfig = {
@@ -37,36 +36,36 @@ try {
   };
   const { merged } = JSON.parse(github.context.payload);
   
-  context.log(`Is PR merged?: ${merged}`);
-  context.log(`GH config: ${ghConfig}`);
-  context.log(`This is release type: ${releaseType}`);
+  console.log(`Is PR merged?: ${merged}`);
+  console.log(`GH config: ${ghConfig}`);
+  console.log(`This is release type: ${releaseType}`);
 
   if (merged) {
-    context.log('PR has been merged!');
+    console.log('PR has been merged!');
     if (isTravis) {
-      context.log('Using travis release!');
+      console.log('Using travis release!');
       const travisConfig = core.getInput('travis-token');
-      travisTrigger(ghConfig, releaseType, context, {
+      travisTrigger(ghConfig, releaseType, {
         token: travisToken,
         ...travisConfig
       });
     }
   
     if (isGithubAction) {
-      context.log('Using github action release!');
+      console.log('Using github action release!');
       const travisConfig = core.getInput('gh-release-bot-token') || core.getInput('gh-bot-token');
-      ghTrigger(ghConfig, releaseType, context, {
+      ghTrigger(ghConfig, releaseType, {
         token: travisToken,
         ...travisConfig
       });
     }
   } else {
-    context.log('PR not merged!');
+    console.log('PR not merged!');
   }
 
   // Get the JSON webhook payload for the event that triggered the workflow
   const payload = JSON.stringify(github.context.payload, undefined, 2)
-  context.log(`The event payload: ${payload}`);
+  console.log(`The event payload: ${payload}`);
 } catch (error) {
   core.setFailed(error.message);
 }
