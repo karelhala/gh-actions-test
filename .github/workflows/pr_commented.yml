@@ -4,6 +4,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Travis build
     if: ${{ github.event.comment.body == 'release' }}
     steps:
     - uses: actions/checkout@v2
