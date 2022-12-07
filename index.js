@@ -46,7 +46,7 @@ try {
 
   const triggeredBy = github.context.payload?.comment?.user?.login || github.context.payload?.sender.login;
 
-  console.log('Can release', allowedUsers.includes(triggeredBy));
+  console.log('Can release?', allowedUsers.includes(triggeredBy));
 
   // TODO: remove !merged    !!!!!!!!
   if (merged || !merged) {
