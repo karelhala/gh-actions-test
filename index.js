@@ -22,7 +22,6 @@ try {
     console.log('Not releasing. It has already been released!');
     return;
   }
-  console.log(core.getInput('is-gh'), 'this is just the raw is gh');
   const travisConfig = JSON.parse(core.getInput('travis-config'));
   const ghReleaseConfig = JSON.parse(core.getInput('gh-config'));
   const allowedUsers = JSON.parse(core.getInput('allowed-users'));
@@ -40,6 +39,7 @@ try {
   };
   const merged = github.context.payload?.issue?.state || github.context.payload?.pull_request?.state;
   
+  console.log(JSON.stringify(github.context.payload.pull_request), 'this is pull_request info!');
   console.log(`Is PR merged?: ${merged}`);
   console.log(`GH config: ${JSON.stringify(ghConfig)}`);
   console.log(`This is release type: ${releaseType}`);
