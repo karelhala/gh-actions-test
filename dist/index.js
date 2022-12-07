@@ -15962,7 +15962,7 @@ try {
   };
   const merged = github.context.payload?.issue?.state || github.context.payload?.pull_request?.state;
   
-  console.log(JSON.stringify(github.context.payload.pull_request), 'this is pull_request info!');
+  console.log(JSON.stringify(github.context.payload.pull_request), 'this is pull_request infos!');
   console.log(`Is PR merged?: ${merged}`);
   console.log(`GH config: ${JSON.stringify(ghConfig)}`);
   console.log(`This is release type: ${releaseType}`);
