@@ -54,7 +54,7 @@ try {
 
   if (merged) {
     console.log('PR has been merged!');
-    createComment({ ...ghConfig, body: triggerRelease(type) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
+    createComment({ ...ghConfig, body: triggerRelease(releaseType) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
     if (isTravis) {
       console.log('Using travis release!');
       travisTrigger(ghConfig, releaseType, travisConfig);
