@@ -15940,18 +15940,16 @@ const toReleaseType = ({ comment, label }) => {
   }[type || labelType] || labelType;
 }
 
-const canRelease = () => {
-
-};
-
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
     console.log('Not releasing. It has already been released!');
     return;
   }
   console.log(core.getInput('is-gh'), 'this is just the raw is gh');
-  const travisConfig = core.getInput('travis-config');
+  const travisConfig = JSON.parse(core.getInput('travis-config'));
   const ghReleaseConfig = JSON.parse(core.getInput('gh-config'));
+  const allowedUsers = JSON.parse(core.getInput('allowed-users'));
+  console.log(allowedUsers);
   const isGithubAction = ghReleaseConfig.token !== false;
   console.log(`Is it gh actions?: ${isGithubAction}`);
   const isTravis = travisConfig.token !== false;
@@ -15968,6 +15966,10 @@ try {
   console.log(`Is PR merged?: ${merged}`);
   console.log(`GH config: ${JSON.stringify(ghConfig)}`);
   console.log(`This is release type: ${releaseType}`);
+
+  const triggeredBy = github.context.payload?.comment?.user?.login || github.context.payload?.sender.login;
+
+  console.log('Can release', allowedUsers.includes(triggeredBy));
 
   // TODO: remove !merged    !!!!!!!!
   if (merged || !merged) {
