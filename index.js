@@ -8,10 +8,11 @@ const bug = 'bugfix';
 const minor = 'minor';
 const major = 'major';
 
-const toReleaseType = ({ comment, label }) => {
+const toReleaseType = ({ comment, pull_request }) => {
   const { body: type } = comment || {};
-  const { name: labelType } = label || {};
+  const { name: labelType } = pull_request?.labels?.find(({ name } = {}) => [bug, minor, 'bug', 'bugfix'].includes(name))
   return {
+    'bug': bug,
     'release': bug,
     'release minor': minor,
     'release major': major
@@ -52,7 +53,8 @@ try {
 
   console.log('Can release?', allowedUsers.includes(triggeredBy));
 
-  if (merged) {
+  // TODO: remove !merged
+  if (merged || !merged) {
     console.log('PR has been merged!');
     createComment({ ...ghConfig, body: triggerRelease(releaseType) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
     if (isTravis) {
