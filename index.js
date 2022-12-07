@@ -3,9 +3,9 @@ const github = require('@actions/github');
 const travisTrigger = require('./lib/travis-bot');
 const ghTrigger = require('./lib/gh-bot');
 
-const bug = 'BUG';
-const minor = 'MINOR';
-const major = 'MAJOR';
+const bug = 'bugfix';
+const minor = 'minor';
+const major = 'major';
 
 const toReleaseType = ({ comment, label }) => {
   const { body: type } = comment || {};
@@ -17,15 +17,21 @@ const toReleaseType = ({ comment, label }) => {
   }[type || labelType] || labelType;
 }
 
+const canRelease = () => {
+
+};
+
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
     console.log('Not releasing. It has already been released!');
     return;
   }
   console.log(core.getInput('is-gh'), 'this is just the raw is gh');
-  const isGithubAction = JSON.parse(core.getInput('is-gh'));
+  const travisConfig = core.getInput('travis-config');
+  const ghReleaseConfig = JSON.parse(core.getInput('gh-config'));
+  const isGithubAction = ghReleaseConfig.token !== false;
   console.log(`Is it gh actions?: ${isGithubAction}`);
-  const isTravis = JSON.parse(core.getInput('is-travis'));
+  const isTravis = travisConfig.token !== false;
   console.log(`Is it travis?: ${isTravis}`);
   const releaseType = toReleaseType(github.context.payload);
   const [owner, group] = github.context.payload?.repository?.full_name?.split('/') || [];
@@ -45,7 +51,6 @@ try {
     console.log('PR has been merged!');
     if (isTravis) {
       console.log('Using travis release!');
-      const travisConfig = core.getInput('travis-config');
       travisTrigger(ghConfig, releaseType, {
         token: core.getInput('travis-token'),
         ...travisConfig
@@ -54,10 +59,9 @@ try {
   
     if (isGithubAction) {
       console.log('Using github action release!');
-      const travisConfig = core.getInput('gh-release-bot-token') || core.getInput('gh-bot-token');
       ghTrigger(ghConfig, releaseType, {
         token: travisToken,
-        ...travisConfig
+        ...ghReleaseConfig
       });
     }
   } else {

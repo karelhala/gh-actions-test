@@ -16,18 +16,10 @@ inputs:
     description: 'JSON of github action config: script, group?, repo?, token?'
     required: false
     default: '{}'
-  travis-token:
-    description: 'Token to use to trigger travis build'
+  allowed-users:
+    description: 'Array of users who can trigger a release'
     required: false
-    default: false
-  is-gh:
-    description: 'Flag to use GH action'
-    required: false
-    default: false
-  is-travis:
-    description: 'Flag to use travis build'
-    required: false
-    default: false
+    default: '[]'
 runs:
   using: 'node16'
   main: 'dist/index.js'
