@@ -15961,7 +15961,7 @@ try {
     repo: group,
     number: github.context.payload?.issue?.number || github.context.payload?.number,
   };
-  const { merged } = github.context.payload?.issue?.state || github.context.payload?.pull_request?.state;
+  const merged = github.context.payload?.issue?.state || github.context.payload?.pull_request?.state;
   
   console.log(`Is PR merged?: ${merged}`);
   console.log(`GH config: ${JSON.stringify(ghConfig)}`);
