@@ -15,6 +15,8 @@ jobs:
         uses: karelhala/gh-actions-test@v1.22
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
+          travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'
+          allowed-users: '["karelhala"]'
   pr_commented:
     runs-on: ubuntu-latest
     name: A job to trigger released on comment
