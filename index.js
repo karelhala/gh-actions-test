@@ -16,7 +16,6 @@ const releaseTypes = {
 
 const toReleaseType = ({ comment, pull_request }) => {
   const { body: type } = comment || {};
-  console.log(JSON.stringify(pull_request?.labels), 'All labels');
   const label = pull_request?.labels?.find((item) => Object.keys(releaseTypes).includes(item?.name))
   console.log(JSON.stringify(label), 'Found label');
   return {
@@ -61,8 +60,7 @@ try {
 
   console.log('Can release?', allowedUsers.includes(triggeredBy));
 
-  // TODO: remove !merged
-  if (merged || !merged) {
+  if (merged) {
     console.log('PR has been merged!');
     createComment({ ...ghConfig, body: triggerRelease(releaseType) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
     if (isTravis) {
