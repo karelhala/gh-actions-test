@@ -2,6 +2,7 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 const travisTrigger = require('./lib/travis-bot');
 const ghTrigger = require('./lib/gh-bot');
+const createComment = require('./lib/comment-bot');
 
 const bug = 'bugfix';
 const minor = 'minor';
@@ -16,6 +17,9 @@ const toReleaseType = ({ comment, label }) => {
     'release major': major
   }[type || labelType] || labelType;
 }
+
+const triggerRelease = (type) => `&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:soon::shipit::octocat:
+&emsp;&emsp;&emsp;&emsp;&emsp;${type === bug ? ':bug:' : ':rose:'}Shipit Squirrel has this release **${type}** surrounded, be ready for a new version${type === bug ? ':beetle:' : ':sunflower:'}`;
 
 try {
   const action = github.context.payload;
@@ -48,9 +52,9 @@ try {
 
   console.log('Can release?', allowedUsers.includes(triggeredBy));
 
-  // TODO: remove !merged    !!!!!!!!
   if (merged) {
     console.log('PR has been merged!');
+    createComment({ ...ghConfig, body: triggerRelease(type) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
     if (isTravis) {
       console.log('Using travis release!');
       travisTrigger(ghConfig, releaseType, travisConfig);

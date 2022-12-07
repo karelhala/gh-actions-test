@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'Releaser'
+description: 'Trigger travis or GH action via comment or label'
 inputs:
   gh-bot-token:  # id of input
     description: 'Token to use to comment on PR'
