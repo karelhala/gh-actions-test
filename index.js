@@ -10,13 +10,15 @@ const major = 'major';
 
 const toReleaseType = ({ comment, pull_request }) => {
   const { body: type } = comment || {};
-  const { name: labelType } = pull_request?.labels?.find(({ name } = {}) => [bug, minor, 'bug', 'bugfix'].includes(name))
+  const label = pull_request?.labels?.find((item) => [bug, minor, 'bug', 'bugfix'].includes(item?.name))
+  console.log(JSON.stringify(label), 'Found label');
+  console.log(JSON.stringify(pull_request?.labels), 'All labels');
   return {
     'bug': bug,
     'release': bug,
     'release minor': minor,
     'release major': major
-  }[type || labelType] || labelType;
+  }[type || label?.name] || label?.name;
 }
 
 const triggerRelease = (type) => `&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;:soon::shipit::octocat:
