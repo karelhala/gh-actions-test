@@ -15940,21 +15940,19 @@ const toReleaseType = ({ comment, label }) => {
   }[type || labelType] || labelType;
 }
 
-const canRelease = () => {
-
-};
-
 try {
   if (github.context.payload.issue?.labels?.find(({ name }) => name === 'released')) {
     console.log('Not releasing. It has already been released!');
     return;
   }
   console.log(core.getInput('is-gh'), 'this is just the raw is gh');
-  const travisConfig = core.getInput('travis-config');
+  const travisConfig = JSON.parse(core.getInput('travis-config'));
   const ghReleaseConfig = JSON.parse(core.getInput('gh-config'));
-  const isGithubAction = ghReleaseConfig.token !== false;
+  const allowedUsers = JSON.parse(core.getInput('allowed-users'));
+  console.log(allowedUsers);
+  const isGithubAction = !!ghReleaseConfig.token;
   console.log(`Is it gh actions?: ${isGithubAction}`);
-  const isTravis = travisConfig.token !== false;
+  const isTravis = !!travisConfig.token;
   console.log(`Is it travis?: ${isTravis}`);
   const releaseType = toReleaseType(github.context.payload);
   const [owner, group] = github.context.payload?.repository?.full_name?.split('/') || [];
@@ -15969,23 +15967,21 @@ try {
   console.log(`GH config: ${JSON.stringify(ghConfig)}`);
   console.log(`This is release type: ${releaseType}`);
 
+  const triggeredBy = github.context.payload?.comment?.user?.login || github.context.payload?.sender.login;
+
+  console.log('Can release', allowedUsers.includes(triggeredBy));
+
   // TODO: remove !merged    !!!!!!!!
   if (merged || !merged) {
     console.log('PR has been merged!');
     if (isTravis) {
       console.log('Using travis release!');
-      travisTrigger(ghConfig, releaseType, {
-        token: core.getInput('travis-token'),
-        ...travisConfig
-      });
+      travisTrigger(ghConfig, releaseType, travisConfig);
     }
   
     if (isGithubAction) {
       console.log('Using github action release!');
-      ghTrigger(ghConfig, releaseType, {
-        token: travisToken,
-        ...ghReleaseConfig
-      });
+      ghTrigger(ghConfig, releaseType, ghReleaseConfig);
     }
   } else {
     console.log('PR not merged!');
