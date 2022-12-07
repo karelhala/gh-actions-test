@@ -18257,12 +18257,18 @@ const createComment = __nccwpck_require__(1610);
 const bug = 'bugfix';
 const minor = 'minor';
 const major = 'major';
+const releaseTypes = {
+  'bug': bug,
+  'release': bug,
+  'release minor': minor,
+  'release major': major
+};
 
 const toReleaseType = ({ comment, pull_request }) => {
   const { body: type } = comment || {};
-  const label = pull_request?.labels?.find((item) => [bug, minor, 'bug', 'bugfix'].includes(item?.name))
-  console.log(JSON.stringify(label), 'Found label');
   console.log(JSON.stringify(pull_request?.labels), 'All labels');
+  const label = pull_request?.labels?.find((item) => Object.keys(releaseTypes).includes(item?.name))
+  console.log(JSON.stringify(label), 'Found label');
   return {
     'bug': bug,
     'release': bug,
