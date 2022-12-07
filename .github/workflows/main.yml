@@ -1,8 +1,8 @@
 on:
   pull_request:
-    types: [ labeled ]
+    types: [ labeled, closed ]
   issue_comment:
-    types: [created, edited]
+    types: [ created, edited ]
 
 jobs:
   pr_labeled:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.23
+        uses: karelhala/gh-actions-test@v1.24
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'
@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Hello world action step
         id: hello
-        uses: karelhala/gh-actions-test@v1.23
+        uses: karelhala/gh-actions-test@v1.24
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'
