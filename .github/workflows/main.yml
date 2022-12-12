@@ -7,36 +7,11 @@ on:
 jobs:
   pr_merged:
     runs-on: ubuntu-latest
-    name: A job to trigger released on pr merge
-    if: github.event.pull_request.merged == true
+    name: Trigger job on comment, merge or label
     steps:
-      - name: Hello world action step
-        id: hello
-        uses: karelhala/gh-actions-test@v1.31
-        with:
-          gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-          travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'
-          allowed-users: '["karelhala"]'
-  pr_labeled:
-    runs-on: ubuntu-latest
-    name: A job to trigger released on label
-    if: ${{ github.event.label.name == 'release' || github.event.label.name == 'release minor' }}
-    steps:
-      - name: Hello world action step
-        id: hello
-        uses: karelhala/gh-actions-test@v1.31
-        with:
-          gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
-          travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'
-          allowed-users: '["karelhala"]'
-  pr_commented:
-    runs-on: ubuntu-latest
-    name: A job to trigger released on comment
-    if: ${{ github.event.issue.pull_request && (github.event.comment.body == 'release' || github.event.comment.body == 'release minor' || github.event.comment.body == 'release major') }}
-    steps:
-      - name: Hello world action step
-        id: hello
-        uses: karelhala/gh-actions-test@v1.31
+      - name: Trigger release
+        id: release
+        uses: karelhala/gh-actions-test@v1.32
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'

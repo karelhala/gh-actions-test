@@ -60,7 +60,7 @@ try {
 
   console.log('Can release?', allowedUsers.includes(triggeredBy));
 
-  if (merged) {
+  if (merged && releaseType) {
     console.log('PR has been merged!');
     createComment({ ...ghConfig, body: triggerRelease(releaseType) }, { botName: core.getInput('bot-name'), token: core.getInput('gh-bot-token') });
     if (isTravis) {
