@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Trigger release
         id: release
-        uses: karelhala/gh-actions-test@v1.32
+        uses: karelhala/gh-actions-test@v1.33
         with:
           gh-bot-token: ${{ secrets.GH_BOT_TOKEN }}
           travis-config: '{"token":"${{ secrets.TRAVIS_TOKEN }}"}'

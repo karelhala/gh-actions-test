@@ -19838,8 +19838,29 @@ var require_travis_bot = __commonJS({
 var require_gh_bot = __commonJS({
   "lib/gh-bot.js"(exports2, module2) {
     var axios = require_axios();
-    async function ghTrigger2({ owner, repo, number }, releaseType, context, config) {
-      context.log("Missing implementation!");
+    async function ghTrigger2({ owner, repo }, config) {
+      const body = {
+        "event_type": config.event_type
+      };
+      const githubActionURL = ` https://api.github.com/repos/${config?.group || owner}/${config?.repo || repo}/dispatches`;
+      console.log(`Notifyig travis on URL: ${githubActionURL}`);
+      console.log(`With data: ${JSON.stringify(body)}`);
+      try {
+        axios.post(
+          githubActionURL,
+          body,
+          {
+            headers: {
+              "Authorization": `Bearer ${config?.token}`
+            }
+          }
+        ).catch(({ response: { data, status } }) => {
+          console.log("Error status: ", status);
+          console.log("Error data: ", data);
+        });
+      } catch (e) {
+        console.log(e);
+      }
     }
     module2.exports = ghTrigger2;
   }
