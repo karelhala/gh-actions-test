@@ -17,3 +17,15 @@ jobs:
           node-version: 16.x
       - run: npm ci
       - run: npm run build --if-present
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+      - name: Commit report
+        run: |
+          git config --global user.name 'karelhala'
+          git config --global user.email 'khala@redhat.com.com'
+          git commit -am "Automated report"
+          git tag -a -m "" v${{ steps.previoustag.outputs.tag }}
+          git push --follow-tags
