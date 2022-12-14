@@ -26,6 +26,6 @@ jobs:
         run: |
           git config --global user.name 'karelhala'
           git config --global user.email 'khala@redhat.com.com'
-          git commit -am "Automated report"
+          git commit --allow-empty -am "Automated report"
           git tag -a -m "" v${{ steps.previoustag.outputs.tag }}
           git push --follow-tags
