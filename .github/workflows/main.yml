@@ -1,3 +1,4 @@
+name: Releaser
 on:
   pull_request:
     types: [ labeled, closed ]
